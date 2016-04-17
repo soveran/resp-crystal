@@ -6,11 +6,13 @@ describe "Resp" do
   end
 
   it "should accept host and port" do
-    Resp.new("localhost", 6379)
+    c = Resp.new("localhost", 6379)
+    assert_equal "tcp_port:6379", info(c, "server")["tcp_port:6379"]
   end
 
   it "should accept a URI" do
-    Resp.new("redis://localhost:6379")
+    c = Resp.new("redis://localhost:6379")
+    assert_equal "tcp_port:6379", info(c, "server")["tcp_port:6379"]
   end
 
   it "should accept commands" do
