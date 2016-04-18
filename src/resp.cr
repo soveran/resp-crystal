@@ -52,18 +52,18 @@ class Resp
     host = uri.host || "localhost"
     port = uri.port || 6379
     auth = uri.password
+    db   = uri.path.to_s[/\d+$/]?
 
-    new(host, port, auth)
+    new(host, port, auth, db)
   end
 
-  def initialize(host, port, auth = nil)
+  def initialize(host, port, auth = nil, db = nil)
     @sock = TCPSocket.new(host, port)
     @buff = Array(String).new
     @errs = Array(String).new
 
-    if auth
-      call("AUTH", auth as String)
-    end
+    call("AUTH", auth) if auth
+    call("SELECT", db) if db
   end
 
   def finalize
