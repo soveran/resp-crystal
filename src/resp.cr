@@ -46,19 +46,17 @@ class Resp
     encode(args)
   end
 
-  def self.new(uri_string : String)
-    uri = URI.parse(uri_string)
+  getter :url
+
+  def initialize(@url : String)
+    uri = URI.parse(@url)
 
     host = uri.host || "localhost"
     port = uri.port || 6379
     auth = uri.password
     db   = uri.path.to_s[/\d+$/]?
 
-    new(host, port, auth, db)
-  end
-
-  def initialize(host, port, auth = nil, db = nil)
-    @sock = TCPSocket.new(host, port)
+    @sock = TCPSocket.new(host, port.to_i)
     @buff = Array(String).new
     @errs = Array(String).new
 
