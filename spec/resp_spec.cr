@@ -2,7 +2,7 @@ require "./spec_helper"
 
 describe "Resp" do
   before do
-    c = Resp.new("localhost", 6379)
+    c = Resp.new("redis://localhost:6379")
     c.call("FLUSHDB")
   end
 
@@ -11,7 +11,7 @@ describe "Resp" do
   end
 
   it "should accept host and port" do
-    c = Resp.new("localhost", 6379)
+    c = Resp.new("redis://localhost:6379")
     assert_equal "tcp_port:6379", info(c, "server")["tcp_port:6379"]
   end
 
@@ -20,7 +20,7 @@ describe "Resp" do
     ex = nil
 
     begin
-      Resp.new("localhost", 6379, auth: "foo")
+      Resp.new("redis://:foo@localhost:6379")
       raise Exception.new
     rescue ex : Resp::Error
       assert_equal message, ex.message
@@ -28,7 +28,7 @@ describe "Resp" do
   end
 
   it "should accept db" do
-    c = Resp.new("localhost", 6379, db: "3")
+    c = Resp.new("redis://localhost:6379/3")
 
     c.call("SET", "foo", "1")
     assert_equal 1, c.call("DBSIZE")
@@ -58,19 +58,19 @@ describe "Resp" do
   end
 
   it "should accept commands" do
-    c = Resp.new("localhost", 6379)
+    c = Resp.new("redis://localhost:6379")
 
     assert_equal "PONG", c.call("PING")
   end
 
   it "should accept arrays as commands" do
-    c = Resp.new("localhost", 6379)
+    c = Resp.new("redis://localhost:6379")
 
     assert_equal "PONG", c.call(["PING"])
   end
 
   it "should pipeline commands" do
-    c = Resp.new("localhost", 6379)
+    c = Resp.new("redis://localhost:6379")
 
     c.queue("ECHO", "hello")
     c.queue("ECHO", "world")
@@ -79,7 +79,7 @@ describe "Resp" do
   end
 
   it "should raise Redis errors" do
-    c = Resp.new("localhost", 6379)
+    c = Resp.new("redis://localhost:6379")
 
     assert_raise(Resp::Error) do
       c.call("FOO")
@@ -92,5 +92,10 @@ describe "Resp" do
     assert_raise(Resp::Error) do
       c.commit
     end
+  end
+
+  it "should be able to get the URL back from the client" do
+    c = Resp.new("redis://localhost:6379/8")
+    assert_equal "redis://localhost:6379/8", c.url
   end
 end
