@@ -69,6 +69,13 @@ describe "Resp" do
     assert_equal "PONG", c.call(["PING"])
   end
 
+  it "should accept non-string arguments" do
+    c = Resp.new("redis://localhost:6379")
+
+    assert_equal "OK", c.call("SET", "foo", 1)
+    assert_equal "1",  c.call("GET", "foo")
+  end
+
   it "should pipeline commands" do
     c = Resp.new("redis://localhost:6379")
 

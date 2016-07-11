@@ -31,14 +31,15 @@ class Resp
   alias Reply = Nil | Int64 | String | Array(Reply)
 
   def self.encode(args : Enumerable)
-    String.build do |str|
-      str << sprintf("*%d\r\n", args.size)
+    String.build do |res|
+      res << sprintf("*%d\r\n", args.size)
 
       args.each do |arg|
-        str << sprintf("$%d\r\n%s\r\n", arg.bytesize, arg)
+        str = arg.to_s
+        res << sprintf("$%d\r\n%s\r\n", str.bytesize, str)
       end
 
-      str << "\r\n"
+      res << "\r\n"
     end
   end
 
