@@ -77,16 +77,8 @@ class Resp
     @sock.skip(2)
   end
 
-  def discard_eol(str)
-    str.byte_slice(0, str.bytesize - 2)
-  end
-
   def readstr
-    str = @sock.gets
-
-    raise ProtocolError.new unless str
-
-    discard_eol(str)
+    @sock.gets || raise ProtocolError.new
   end
 
   def readnum
