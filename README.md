@@ -8,7 +8,7 @@ can be used for interacting with Redis and Disque servers.
 ```crystal
 require "resp"
 
-client = Resp.new("localhost", 6379)
+client = Resp.new("redis://localhost:6379")
 
 client.call("SET", "foo", "42")
 client.call("GET", "foo") #=> "42"
@@ -21,7 +21,7 @@ You can pipeline commands by using the `queue`/`commit` methods.
 ```crystal
 require "resp"
 
-client = Resp.new("localhost", 6379)
+client = Resp.new("redis://localhost:6379")
 
 client.queue("ECHO", "foo")
 client.queue("ECHO", "bar")
