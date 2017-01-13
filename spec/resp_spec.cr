@@ -105,4 +105,16 @@ describe "Resp" do
     c = Resp.new("redis://localhost:6379/8")
     assert_equal "redis://localhost:6379/8", c.url
   end
+
+  it "should accept missing methods as commands" do
+    c = Resp.new("redis://localhost:6379")
+
+    assert_equal "PONG", c.ping
+    assert_equal "OK", c.set("foo", "42")
+    assert_equal "42", c.get("foo")
+    
+    assert_raise(Resp::Error) do
+      c.foo
+    end
+  end
 end

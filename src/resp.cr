@@ -199,4 +199,8 @@ class Resp
   def quit
     call("QUIT")
   end
+
+  macro method_missing(m)
+    call({{m.args.unshift(m.name.id.stringify)}})
+  end
 end
