@@ -7,7 +7,7 @@ describe "Resp" do
   end
 
   it "should encode expressions as RESP" do
-    assert_equal "*1\r\n$3\r\nFOO\r\n\r\n", Resp.encode(["FOO"])
+    assert_equal "*1\r\n$3\r\nFOO\r\n", Resp.encode(["FOO"])
   end
 
   it "should accept host and port" do
