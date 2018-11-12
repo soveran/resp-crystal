@@ -38,8 +38,6 @@ class Resp
         str = arg.to_s
         res << sprintf("$%d\r\n%s\r\n", str.bytesize, str)
       end
-
-      res << "\r\n"
     end
   end
 
