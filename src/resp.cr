@@ -108,6 +108,7 @@ class Resp
       if size == -1
         return nil
       elsif size == 0
+        discard_eol
         return ""
       end
 
