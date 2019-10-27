@@ -2,7 +2,7 @@ require "./spec_helper"
 
 describe "Resp" do
   before do
-    c = Resp.new("redis://localhost:6379")
+    c = Resp.new("redis://localhost:#{REDIS_PORT}")
     c.call("FLUSHDB")
   end
 
@@ -11,8 +11,8 @@ describe "Resp" do
   end
 
   it "should accept host and port" do
-    c = Resp.new("redis://localhost:6379")
-    assert_equal "tcp_port:6379", info(c, "server")["tcp_port:6379"]
+    c = Resp.new("redis://localhost:#{REDIS_PORT}")
+    assert_equal "tcp_port:#{REDIS_PORT}", info(c, "server")["tcp_port:#{REDIS_PORT}"]
   end
 
   it "should accept auth" do
@@ -20,7 +20,7 @@ describe "Resp" do
     ex = nil
 
     begin
-      Resp.new("redis://:foo@localhost:6379")
+      Resp.new("redis://:foo@localhost:#{REDIS_PORT}")
       raise Exception.new
     rescue ex : Resp::Error
       assert_equal message, ex.message
@@ -28,7 +28,7 @@ describe "Resp" do
   end
 
   it "should accept db" do
-    c = Resp.new("redis://localhost:6379/3")
+    c = Resp.new("redis://localhost:#{REDIS_PORT}/3")
 
     c.call("SET", "foo", "1")
     assert_equal 1, c.call("DBSIZE")
@@ -38,46 +38,46 @@ describe "Resp" do
   end
 
   it "should accept a URI without a path" do
-    c = Resp.new("redis://localhost:6379")
-    assert_equal "tcp_port:6379", info(c, "server")["tcp_port:6379"]
+    c = Resp.new("redis://localhost:#{REDIS_PORT}")
+    assert_equal "tcp_port:#{REDIS_PORT}", info(c, "server")["tcp_port:#{REDIS_PORT}"]
   end
 
   it "should accept a URI with an empty path" do
-    c = Resp.new("redis://localhost:6379/")
-    assert_equal "tcp_port:6379", info(c, "server")["tcp_port:6379"]
+    c = Resp.new("redis://localhost:#{REDIS_PORT}/")
+    assert_equal "tcp_port:#{REDIS_PORT}", info(c, "server")["tcp_port:#{REDIS_PORT}"]
   end
 
   it "should accept a URI with a numeric path" do
-    c = Resp.new("redis://localhost:6379/3")
-    assert_equal "tcp_port:6379", info(c, "server")["tcp_port:6379"]
+    c = Resp.new("redis://localhost:#{REDIS_PORT}/3")
+    assert_equal "tcp_port:#{REDIS_PORT}", info(c, "server")["tcp_port:#{REDIS_PORT}"]
   end
 
   it "should accept a URI with an invalid path" do
-    c = Resp.new("redis://localhost:6379/a")
-    assert_equal "tcp_port:6379", info(c, "server")["tcp_port:6379"]
+    c = Resp.new("redis://localhost:#{REDIS_PORT}/a")
+    assert_equal "tcp_port:#{REDIS_PORT}", info(c, "server")["tcp_port:#{REDIS_PORT}"]
   end
 
   it "should accept commands" do
-    c = Resp.new("redis://localhost:6379")
+    c = Resp.new("redis://localhost:#{REDIS_PORT}")
 
     assert_equal "PONG", c.call("PING")
   end
 
   it "should accept arrays as commands" do
-    c = Resp.new("redis://localhost:6379")
+    c = Resp.new("redis://localhost:#{REDIS_PORT}")
 
     assert_equal "PONG", c.call(["PING"])
   end
 
   it "should accept non-string arguments" do
-    c = Resp.new("redis://localhost:6379")
+    c = Resp.new("redis://localhost:#{REDIS_PORT}")
 
     assert_equal "OK", c.call("SET", "foo", 1)
     assert_equal "1",  c.call("GET", "foo")
   end
 
   it "should pipeline commands" do
-    c = Resp.new("redis://localhost:6379")
+    c = Resp.new("redis://localhost:#{REDIS_PORT}")
 
     c.queue("ECHO", "hello")
     c.queue("ECHO", "world")
@@ -86,7 +86,7 @@ describe "Resp" do
   end
 
   it "should raise Redis errors" do
-    c = Resp.new("redis://localhost:6379")
+    c = Resp.new("redis://localhost:#{REDIS_PORT}")
 
     assert_raise(Resp::Error) do
       c.call("FOO")
@@ -102,12 +102,12 @@ describe "Resp" do
   end
 
   it "should be able to get the URL back from the client" do
-    c = Resp.new("redis://localhost:6379/8")
-    assert_equal "redis://localhost:6379/8", c.url
+    c = Resp.new("redis://localhost:#{REDIS_PORT}/8")
+    assert_equal "redis://localhost:#{REDIS_PORT}/8", c.url
   end
 
   it "should accept missing methods as commands" do
-    c = Resp.new("redis://localhost:6379")
+    c = Resp.new("redis://localhost:#{REDIS_PORT}")
 
     assert_equal "PONG", c.ping
     assert_equal "OK", c.set("foo", "42")

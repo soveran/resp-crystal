@@ -14,7 +14,7 @@ jobs:
       redis:
         image: redis
         ports:
-        - 6379:6379
+        - 6379/tcp
 
     steps:
     - uses: actions/checkout@v1
@@ -22,3 +22,5 @@ jobs:
       run: shards install
     - name: Run tests
       run: crystal spec
+      env:
+        REDIS_PORT: ${{ job.services.redis.ports[6379] }}
