@@ -3,6 +3,8 @@
 Lightweight [RESP](http://redis.io/topics/protocol) client that
 can be used for interacting with Redis and Disque servers.
 
+![CI](https://github.com/soveran/resp-crystal/workflows/Crystal%20CI/badge.svg)
+
 ## Usage
 
 ```crystal
