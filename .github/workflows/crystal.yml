@@ -21,6 +21,6 @@ jobs:
     - name: Install dependencies
       run: shards install
     - name: Run tests
-      run: crystal spec
       env:
         REDIS_PORT: ${{ job.services.redis.ports[6379] }}
+      run: crystal spec
