@@ -18,7 +18,6 @@ describe "Resp" do
   end
 
   it "should accept auth" do
-    message = "ERR Client sent AUTH, but no password is set"
     ex = nil
 
     begin
@@ -27,7 +26,14 @@ describe "Resp" do
       end
       raise Exception.new
     rescue ex : Resp::Error
-      assert_equal message, ex.message
+      message = ex.message
+
+      assert_equal false, message.nil?
+
+      unless message.nil?
+        assert message["ERR"]
+        assert message["AUTH"]
+      end
     end
   end
 
