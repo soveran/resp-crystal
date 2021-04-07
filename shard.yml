@@ -11,4 +11,4 @@ development_dependencies:
     github: emancu/crotest
     version: ~> 1.0.0
 
-crystal: 0.36.1, ~> 1.0.0
+crystal: "0.36.1, ~> 1.0.0"
